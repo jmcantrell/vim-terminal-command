@@ -1,0 +1,62 @@
+*terminal_command.txt*  Functions for running commmands in a terminal buffer
+
+Author:   Jeremy Cantrell <jmcantrell@gmail.com>   *terminal_command-author*
+License:  Same terms as Vim itself (see |license|)
+
+INTRODUCTION                                       *terminal_command* *terminal_command.vim*
+
+This plugin does some cool stuff that you should know about.
+
+CONFIGURATION                                      *terminal_command-configuration*
+
+g:terminal_command_loaded                          *g:terminal_command_loaded*
+    If set in your |vimrc|, terminal_command.vim is not loaded.
+
+FUNCTIONS                                          *terminal_command-functions*
+
+terminal_command#run(command, options = {})        *terminal_command#run()*
+    Run {command} in a terminal buffer.
+
+    The {options} dictionary recognizes the following keys:
+
+        "type": string          Type of window to use for the terminal buffer.
+                                Possible values are:
+                                    "t" for a new tab page
+                                    "s" for a new horizontal split
+                                    "v" for a new vertical split
+                                The default is the current window.
+
+        "end_cb": handler       Callback for when the command is completed.
+                                There is a single argument, the exit status.
+
+terminal_command#to_temp(command, options = {})    *terminal_command#to_temp()*
+    Similar to |terminal_command#run()|, but redirect stdout to a temp file.
+
+    The {options} dictionary recognizes the following keys:
+
+        "write_cb": handler     Callback for when the file is written.
+                                This should be used in place of "end_cb".
+                                There are two arguments, the temp file and exit status.
+
+terminal_command#insert(command, options = {})     *terminal_command#insert()*
+    Insert the stdout of {command} into the current buffer.
+
+    The {options} dictionary recognizes the following keys:
+
+        "placement": string     A normal command used to initiate the insert.
+                                Suggested possibilities: 'i', 'a', 'o', or 'O'.
+                                The default is 'i'.
+
+        "after_keys": string    Keys to feed into the buffer after the insert.
+                                For example, 'a' would put enter insert mode.
+
+terminal_command#read(command, options = {})       *terminal_command#read()*
+    Read the stdout of {command} into the current buffer.
+
+    The {options} dictionary recognizes the following keys:
+
+        "range": string         Passed on to the |:read| command.
+
+See |term_start()| for what is acceptable for {command}.
+
+vim:tw=78:et:ft=help:norl:
