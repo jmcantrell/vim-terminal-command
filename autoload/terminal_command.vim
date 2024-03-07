@@ -18,7 +18,7 @@ function! terminal_command#run(command, ...)
     endif
 
     function! options.exit_cb(job, exit_status) dict
-        if a:exit_status == 0
+        if !get(self, 'remain_on_error', v:false) || a:exit_status == 0
             silent! bdelete!
         endif
         call self.end_cb(a:exit_status)
