@@ -26,6 +26,12 @@ function! terminal_command#run(command, ...)
 
     let term_options = {'curwin': 1, 'exit_cb': function(options.exit_cb)}
 
+    for key in ['cwd']
+        if has_key(options, key)
+            let term_options[key] = options[key]
+        endif
+    endfor
+
     let options.buf_nr = term_start([&shell, '-c', a:command], term_options)
 
     return options.buf_nr
