@@ -21,12 +21,12 @@ function! terminal_command#run(command, ...)
         if !get(self, 'remain_on_error', v:false) || a:exit_status == 0
             silent! bdelete!
         endif
-        call self.end_cb(a:exit_status)
+        call self.end_cb(a:exit_status, self)
     endfunction
 
     let term_options = {'curwin': 1, 'exit_cb': function(options.exit_cb)}
 
-    for key in ['cwd']
+    for key in ['env', 'cwd']
         if has_key(options, key)
             let term_options[key] = options[key]
         endif
@@ -41,8 +41,8 @@ function! terminal_command#to_temp(command, ...)
     let options = empty(a:000) ? {} : a:000[0]
     let options.output_file = tempname()
 
-    function! options.end_cb(exit_status) dict
-        call self.write_cb(self.output_file, a:exit_status)
+    function! options.end_cb(exit_status, options) dict
+        call self.write_cb(self.output_file, a:exit_status, a:options)
         call delete(self.output_file)
     endfunction
 
@@ -56,7 +56,7 @@ function! terminal_command#read(command, ...)
         let options.range = ''
     endif
 
-    function! options.write_cb(output_file, exit_status) dict
+    function! options.write_cb(output_file, exit_status, options) dict
         execute self.range . 'read ' . a:output_file
     endfunction
 
@@ -70,7 +70,7 @@ function! terminal_command#insert(command, ...)
         let options.placement = 'i'
     endif
 
-    function! options.write_cb(output_file, exit_status) dict
+    function! options.write_cb(output_file, exit_status, ...) dict
         execute 'normal! ' . self.placement . join(readfile(a:output_file), '\n')
         if has_key(self, 'after_keys')
             call feedkeys(self.after_keys)

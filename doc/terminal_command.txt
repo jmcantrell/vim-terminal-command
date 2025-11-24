@@ -27,6 +27,12 @@ terminal_command#run(command, options = {})        *terminal_command#run()*
                 "v" for a new vertical split
             The default is the current window.
 
+        "env": dict
+            Environment variables for the new process.
+
+        "cwd": string
+            Current working directory for the new process.
+
         "remain_on_error": boolean
             Normally, the terminal buffer is deleted after the command exits.
             If this option is set to a |truthy| value, it will not be deleted
@@ -35,7 +41,8 @@ terminal_command#run(command, options = {})        *terminal_command#run()*
 
         "end_cb": handler
             Callback for when the command is completed.
-            There is a single argument, the exit status.
+            There are two arguments, the exit status and the options passed to
+            the function.
 
 terminal_command#to_temp(command, options = {})    *terminal_command#to_temp()*
     Similar to |terminal_command#run()|, but redirect stdout to a temp file.
@@ -45,7 +52,8 @@ terminal_command#to_temp(command, options = {})    *terminal_command#to_temp()*
         "write_cb": handler
             Callback for when the file is written.
             This should be used in place of "end_cb".
-            There are two arguments, the temp file and exit status.
+            There are three arguments, the temp file, exit status, and the
+            options passed to the function.
 
 terminal_command#insert(command, options = {})     *terminal_command#insert()*
     Insert the stdout of {command} into the current buffer.
